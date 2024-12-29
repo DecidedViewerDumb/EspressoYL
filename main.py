@@ -1,21 +1,22 @@
 import sqlite3
 import sys
-
+from UI.main import Ui_MainWindow
+from UI.addEditCoffeeForm import Ui_Dialog
 from PyQt6.QtWidgets import QMainWindow, QTableWidgetItem, QApplication, QDialog, QMessageBox
-from PyQt6.uic import loadUi
+from PyQt6 import QtCore, QtGui, QtWidgets
 
 
-class CoffeeApp(QMainWindow):
+class CoffeeApp(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
-        loadUi('main.ui', self)
+        self.setupUi(self)
         self.load_data()
 
         self.action_add.triggered.connect(self.add_coffee)
         self.action_edit.triggered.connect(self.edit_coffee)
 
     def load_data(self):
-        conn = sqlite3.connect('coffee.sqlite')
+        conn = sqlite3.connect('data/coffee.sqlite')
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM coffee')
         res = cursor.fetchall()
@@ -51,10 +52,10 @@ class CoffeeApp(QMainWindow):
             self.load_data()
 
 
-class AddEditCoffeeForm(QDialog):
+class AddEditCoffeeForm(QDialog, Ui_Dialog):
     def __init__(self, parent=None, coffee_id=None):
         super().__init__()
-        loadUi('addEditCoffeeForm.ui', self)
+        self.setupUi(self)
 
         self.coffee_id = coffee_id
         self.parent = parent
@@ -68,7 +69,7 @@ class AddEditCoffeeForm(QDialog):
             self.actionButton.clicked.connect(self.add_coffee)
 
     def load_coffee_data(self, coffee_id):
-        conn = sqlite3.connect('coffee.sqlite')
+        conn = sqlite3.connect('data/coffee.sqlite')
         cursor = conn.cursor()
         cursor.execute(f'SELECT * FROM coffee WHERE ID = {coffee_id}')
         row = cursor.fetchone()
@@ -84,7 +85,7 @@ class AddEditCoffeeForm(QDialog):
         conn.close()
 
     def add_coffee(self):
-        conn = sqlite3.connect('coffee.sqlite')
+        conn = sqlite3.connect('data/coffee.sqlite')
         cursor = conn.cursor()
         cursor.execute('''
             INSERT INTO coffee (name, roast_level, ground_beans, taste_description, price, volume)
@@ -102,7 +103,7 @@ class AddEditCoffeeForm(QDialog):
         self.parent.load_data()
 
     def update_coffee(self):
-        conn = sqlite3.connect('coffee.sqlite')
+        conn = sqlite3.connect('data/coffee.sqlite')
         cursor = conn.cursor()
         cursor.execute('''
             UPDATE coffee
