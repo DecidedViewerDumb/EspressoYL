@@ -3,7 +3,6 @@ import sys
 from UI.main import Ui_MainWindow
 from UI.addEditCoffeeForm import Ui_Dialog
 from PyQt6.QtWidgets import QMainWindow, QTableWidgetItem, QApplication, QDialog, QMessageBox
-from PyQt6 import QtCore, QtGui, QtWidgets
 
 
 class CoffeeApp(QMainWindow, Ui_MainWindow):
